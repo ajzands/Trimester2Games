@@ -1,140 +1,149 @@
-time = 30
-timer = 0
+var ball, paddle, wallTop, wallBottom, wallLeft, wallRight
+var bricks;
+var maxspeed = 10;
+var wall_thickness = 30;
+var brick_w = 40;
+var brick_h = 20;
+var brick_margin = 4;
+var rows = 9;
+var columns = 16;
 score = 0
+lives = 3
 
 function setup() {
-  createCanvas(800, 600);
-  colorMode(HSB);
-  noStroke();
-  var x = random(1,5);
-  
-  line1 = new Rect(0, 0, 50, 600, 251, x, 0, 800) 
-  line2 = new Rect(19, 0, 12, 600, 196, x, 0, 819)
-  line1.loopStyle = 0
-  line2.loopStyle = 0
+	createCanvas(800, 600);
+	noStroke();
+	colorMode(HSB);
+	drawBricks();
+
+	paddle = createSprite(width/2, height-50, 200, 10);
+	paddle.immovable = true;
+
+	wallLeft = createSprite(-15, height/2, wall_thickness, height);
+	wallLeft.immovable = true;
+
+	wallRight = createSprite(width+wall_thickness/2, height/2, wall_thickness, height);
+	wallRight.immovable = true;
+
+	wallTop = createSprite(width/2, -15, width+wall_thickness*2, wall_thickness);
+	wallTop.immovable = true;
+
+ 	wallBottom = createSprite(width/2, height+wall_thickness/2, width+wall_thickness*2, wall_thickness);
+ 	wallBottom.immovable = true;
 
 
-}
-
-function draw() {
-  background(220, 0, 50);
-  line1.display();
-  line2.display();
-
-  var timestop = constrain(time, 0, 9000000)
-  fill(0, 0, 100)
-  textSize(24);
-  text("Time: " + timestop, 700, 25)
-
-  fill(0, 0, 100)
-  textSize(24);
-  text("Score: " + score, 0, 25)
-
-  if(time <= 0){
-		fill(0, 0, 100)
-		textSize(100);
-		text("Game Over! ", 100, 300)
-
-		fill(0, 0, 100)
-		textSize(50);
-		text("Press R to Restart ", 150, 350)
-
-  }
-  if(keyWentDown('R')) {
-	time = 30
-	score = 0
-	console.log("You Restarted ")
-}
+	ball = createSprite(width/2, height-200, 12, 12);
+	ball.maxSpeed = maxspeed;
+	paddle.shapeColor = ball.shapeColor = color(0, 0, 0);
 
 }
 
-function Rect(x, y, wt, ht, hu, vx = 0, vy = 0, tx = 0, ty = 0, loopStyle = 0 ) {
-  var PINGPONG = 0
-  var RESET = 1
-  this.pos = createVector(x, y);
-  this.chapos = createVector(vx, vy);
-  this.initpos = createVector(x, y);
-  this.currpos = this.initpos.copy();
-  this.tarpos = createVector(tx, ty);
-  this.inittarpos = this.tarpos.copy();
-  this.wt = wt 
-  this.ht = ht
-  this.hu = hu
-  this.sat = 80
-  this.br = 80
-  this.currhu = hu
-  this.path = [this.tarpos.copy(), this.initpos.copy()]
-  this.pathStopCounter = 0;
-  this.loopStyle = PINGPONG
 
-  
-  
-  this.update = function(){
-  
-  
-   var distance = this.currpos.dist(this.tarpos); 
-    
-    if(this.loopStyle == PINGPONG) {
-    		//print(distance);
-    		if(distance > 3){
-      		this.currpos.add(this.chapos)
-      	//don't update
-    		} else {
-    		//This is the Reset Loop behavior
-  			//this.currpos = this.initpos.copy();
-    		//This is the Reverse Loop behavior
-    		this.pathStopCounter += 1;
-    		this.tarpos = this.path[this.pathStopCounter % 2]
-      	this.chapos.mult(-1);
-    	}
-  }
-    
-   	if(this.loopStyle == RESET){
-    	if(distance > 3){
-    	this.currpos.add(this.chapos)
-		}	else {
-      this.currpos = this.initpos.copy();
-		}	  	
-	} 
-}    
-   
-    this.display = function(){
-    this.update();
-    fill(this.currhu, this.sat, this.br);
-   	rect(this.currpos.x, this.currpos.y, this.wt, this.ht);
+function draw(){
+	background(189, 80, 100);
+
+	paddle.position.x = constrain(mouseX, paddle.width/2, width-paddle.width/2);
+
+	ball.bounce(wallTop);
+	ball.bounce(wallLeft);
+	ball.bounce(wallRight);
+	if(ball.bounce(wallBottom)){
+		lives -= 1
 	}
+
+	if(ball.bounce(paddle))
+	{
+	var swing = (ball.position.x-paddle.position.x)/3;
+		ball.setSpeed(maxspeed, ball.getDirection()+swing);
+	}
+
+	ball.bounce(bricks, brickHit)
+
+	drawSprites();
+
+	fill(0, 0, 0)
+	textSize(24);
+	text("Score: " + score, 0, 25)
+
+
+	if(lives <= 0){
+		lives = 0
+		fill(0, 0, 0)
+		textSize(100)
+		text("Game Over! ", 100, 400)
+		ball.setSpeed(0, 0, 0)
+		fill(0, 0, 0)
+		textSize(50)
+		text("Press R to Restart ", 150, 450)
+
+	}
+
+	fill(0, 0, 0)
+	textSize(24);
+	text("Lives Remaining: " + lives, 275, 25)
+
+		if(keyWentDown('R')){
+		score = 0
+		lives = 3
+		ball.position.x = width/2
+		ball.position.y = height-200
+		bricks.removeSprites(bricks);
+		drawBricks();
+	}
+
+
+	if(score >= 432){
+		fill(0, 0, 0)
+		textSize(100)
+		text("You Win! ", 200, 400)
+		ball.setSpeed(0, 0, 0)
+		fill(0, 0, 0)
+		textSize(50)
+		text("Press W to play again", 150, 450)
+	}
+
+	if(keyWentDown('W')){
+		score = 0
+		lives = 3
+		ball.position.x = width/2
+		ball.position.y = height-200
+		bricks.removeSprites(bricks);
+		drawBricks();
+	}
+
+	if(keyWentDown('F')){
+		ball.position.x = width/2
+		ball.position.y = height-200
+		ball.velocity.x = 0
+		ball.velocity.y = 0
+	}
+
 }
 
-window.setInterval(function(){
-	time -= 1
+function mousePressed() {
+ if(ball.velocity.x == 0 && ball.velocity.y == 0)
+ 	ball.setSpeed(maxspeed, random(90-10, 90+10));
+}
 
-}, 1000)
- 
-function mouseClicked(){
-  if(line1.currpos.x <= mouseX && mouseX <= (line1.currpos.x + line1.wt)){
-  	if(line1.currpos.y <= mouseY && mouseY <= (line1.currpos.y + line1.ht)){
-  	console.log("You clicked line 1 ")
-  	score += 1
-  	time += 2
-  	} else {
-  		time -= 1
-  	} 
-  }
-  	else {
-  		time -= 1
-  	}
-  
+function brickHit(ball, brick) {
+  score += 3
+  brick.remove();
+}
 
-  if(line2.currpos.x <= mouseX && mouseX <= (line2.currpos.x + line2.wt)){
-  	if(line2.currpos.y <= mouseY && mouseY <= (line2.currpos.y + line2.ht)){
-  	console.log("You clicked line 2 ")
-  	score += 2
-  	time += 3
-	} else {
-		time -= 2
+function drawBricks(){
+
+	 		bricks = new Group();
+
+	var offsetX = width/2-(columns-1)*(brick_margin+brick_w)/2;
+	var offsetY = 80;
+
+	for(var r = 0; r<rows; r++){
+		for(var c = 0; c<columns; c++){
+			var brick = createSprite(offsetX+c*(brick_w+brick_margin), offsetY+r*(brick_h+brick_margin), brick_w, brick_h)
+			brick.shapeColor = color(0, 0, 0)
+			bricks.add(brick)
+			brick.immovable = true;
+		}
 	}
-  }
-  else {
-  	time -= 2
-  }
+
 }

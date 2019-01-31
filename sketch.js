@@ -5,10 +5,11 @@ var wall_thickness = 30;
 var brick_w = 40;
 var brick_h = 20;
 var brick_margin = 4;
-var rows = 9;
+var rows = 2;
 var columns = 16;
 score = 0
 lives = 3
+var currlevel = 1;
 
 function setup() {
 	createCanvas(800, 600);
@@ -41,6 +42,7 @@ function setup() {
 
 function draw(){
 	background(189, 80, 100);
+	nextlevel();
 
 	paddle.position.x = constrain(mouseX, paddle.width/2, width-paddle.width/2);
 
@@ -82,6 +84,10 @@ function draw(){
 	textSize(24);
 	text("Lives Remaining: " + lives, 275, 25)
 
+	fill(0, 0 ,0)
+	textSize(24);
+	text("Level: " + currlevel, 675, 25)
+
 		if(keyWentDown('R')){
 		score = 0
 		lives = 3
@@ -92,7 +98,7 @@ function draw(){
 	}
 
 
-	if(score >= 432){
+	if(score >= 672){
 		fill(0, 0, 0)
 		textSize(100)
 		text("You Win! ", 200, 400)
@@ -117,6 +123,11 @@ function draw(){
 		ball.velocity.x = 0
 		ball.velocity.y = 0
 	}
+
+	if(keyWentDown('M')){
+		bricks.removeSprites(bricks);
+	}
+
 
 }
 
@@ -143,7 +154,24 @@ function drawBricks(){
 			brick.shapeColor = color(0, 0, 0)
 			bricks.add(brick)
 			brick.immovable = true;
+
 		}
 	}
 
 }
+
+function nextlevel(){
+
+	if(bricks.length == 0 && currlevel < 3) {
+		currlevel += 1
+		rows *= 2
+		lives += 1
+		ball.position.x = width/2
+		ball.position.y = height-200
+		ball.velocity.x = 0
+		ball.velocity.y = 0
+		drawBricks();
+	}
+
+}
+

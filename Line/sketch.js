@@ -24,7 +24,7 @@ function draw() {
   var timestop = constrain(time, 0, 9000000)
   fill(0, 0, 100)
   textSize(24);
-  text("Time: " + timestop, 690c, 25)
+  text("Time: " + timestop, 690, 25)
 
   fill(0, 0, 100)
   textSize(24);

@@ -1,177 +1,181 @@
-var ball, paddle, wallTop, wallBottom, wallLeft, wallRight
-var bricks;
+var character, hwall, vwall, start, end
+var walls
 var maxspeed = 10;
-var wall_thickness = 30;
-var brick_w = 40;
-var brick_h = 20;
-var brick_margin = 4;
-var rows = 2;
-var columns = 16;
 score = 0
 lives = 3
+death = false;
+var rows = 5;
+var columns = 5;
+var grid_w = 100;
+var grid_h = 100;
+var grid_margin = 0;
+var level = [["h", "h", "v", 0, "s"],["v", 0, "h", 0, "v"],["h", "v", 0, "h", 0],["h", 0, 0, "h", "v"],["g", "v", 0, "h", 0]]
 var currlevel = 1;
-
-function setup() {
-	createCanvas(800, 600);
+function setup(){
+	createCanvas(800, 600);	
 	noStroke();
 	colorMode(HSB);
-	drawBricks();
+	drawGrid();
 
-	paddle = createSprite(width/2, height-50, 200, 10);
-	paddle.immovable = true;
-
-	wallLeft = createSprite(-15, height/2, wall_thickness, height);
-	wallLeft.immovable = true;
-
-	wallRight = createSprite(width+wall_thickness/2, height/2, wall_thickness, height);
-	wallRight.immovable = true;
-
-	wallTop = createSprite(width/2, -15, width+wall_thickness*2, wall_thickness);
-	wallTop.immovable = true;
-
- 	wallBottom = createSprite(width/2, height+wall_thickness/2, width+wall_thickness*2, wall_thickness);
- 	wallBottom.immovable = true;
-
-
-	ball = createSprite(width/2, height-200, 12, 12);
-	ball.maxSpeed = maxspeed;
-	paddle.shapeColor = ball.shapeColor = color(0, 0, 0);
+	character = createSprite(start.position.x, start.position.y, grid_w/5, grid_h/5);
+	character.shapeColor = color(150, 100, 60)
 
 }
-
 
 function draw(){
-	background(189, 80, 100);
-	nextlevel();
-
-	paddle.position.x = constrain(mouseX, paddle.width/2, width-paddle.width/2);
-
-	ball.bounce(wallTop);
-	ball.bounce(wallLeft);
-	ball.bounce(wallRight);
-	if(ball.bounce(wallBottom)){
-		lives -= 1
-	}
-
-	if(ball.bounce(paddle))
-	{
-	var swing = (ball.position.x-paddle.position.x)/3;
-		ball.setSpeed(maxspeed, ball.getDirection()+swing);
-	}
-
-	ball.bounce(bricks, brickHit)
-
+	update();
+	background(0, 0, 60)
 	drawSprites();
+	//drawGrid();
+	characterupdate();
 
-	fill(0, 0, 0)
-	textSize(24);
-	text("Score: " + score, 0, 25)
-
-
-	if(lives <= 0){
-		lives = 0
-		fill(0, 0, 0)
-		textSize(100)
-		text("Game Over! ", 100, 400)
-		ball.setSpeed(0, 0, 0)
+	if(death){
+		character.position.x = start.position.x
+		character.position.y = start.position.y
+		character.velocity.x = 0
+		character.velocity.y = 0
+		fill(0, 0, 100)
+		rect(0, 0, 800, 800)
 		fill(0, 0, 0)
 		textSize(50)
-		text("Press R to Restart ", 150, 450)
+		text("Game Over, Press R to Restart" , 100, 400)
 
+	}
+
+	if(keyWentDown("r")){
+		lives = 3
+		character.position.x = start.position.x
+		character.position.y = start.position.y
+
+	}
+
+	if(win){
+		character.position.x = start.position.x
+		character.position.y = start.position.y
+		character.velocity.x = 0
+		character.velocity.y = 0
+		fill(0, 0, 100)
+		rect(0, 0, 800, 800)
+		fill(0, 0, 0)
+		textSize(50)
+		text("You Win, Press P to Play Again" , 50, 400)
+	}
+
+	if(keyWentDown("p")){
+		lives -= 2
+		character.position.x = start.position.x
+		character.position.y = start.position.y
 	}
 
 	fill(0, 0, 0)
-	textSize(24);
-	text("Lives Remaining: " + lives, 275, 25)
-
-	fill(0, 0 ,0)
-	textSize(24);
-	text("Level: " + currlevel, 675, 25)
-
-		if(keyWentDown('R')){
-		score = 0
-		lives = 3
-		ball.position.x = width/2
-		ball.position.y = height-200
-		bricks.removeSprites(bricks);
-		drawBricks();
-	}
-
-
-	if(score >= 672){
-		fill(0, 0, 0)
-		textSize(100)
-		text("You Win! ", 200, 400)
-		ball.setSpeed(0, 0, 0)
-		fill(0, 0, 0)
-		textSize(50)
-		text("Press W to play again", 150, 450)
-	}
-
-	if(keyWentDown('W')){
-		score = 0
-		lives = 3
-		ball.position.x = width/2
-		ball.position.y = height-200
-		bricks.removeSprites(bricks);
-		drawBricks();
-	}
-
-	if(keyWentDown('F')){
-		ball.position.x = width/2
-		ball.position.y = height-200
-		ball.velocity.x = 0
-		ball.velocity.y = 0
-	}
-
-	if(keyWentDown('M')){
-		bricks.removeSprites(bricks);
-	}
-
+	textSize(25)
+	text("Lives: " + lives, 0, 25)
 
 }
 
-function mousePressed() {
- if(ball.velocity.x == 0 && ball.velocity.y == 0)
- 	ball.setSpeed(maxspeed, random(90-10, 90+10));
+
+function wallHit(character, hwall, vwall){
+	lives -= 1
+	character.position.x = start.position.x
+	character.position.y = start.position.y
+	character.velocity.x = 0
+	character.velocity.y = 0
+
 }
 
-function brickHit(ball, brick) {
-  score += 3
-  brick.remove();
+function endHit(character, goal){
+	lives = 5
 }
 
-function drawBricks(){
+function drawGrid(){
 
-	 		bricks = new Group();
+		grids = new Group();
 
-	var offsetX = width/2-(columns-1)*(brick_margin+brick_w)/2;
+	var offsetX = width/2-(columns-1)*(grid_margin+grid_w)/2;
 	var offsetY = 80;
 
 	for(var r = 0; r<rows; r++){
 		for(var c = 0; c<columns; c++){
-			var brick = createSprite(offsetX+c*(brick_w+brick_margin), offsetY+r*(brick_h+brick_margin), brick_w, brick_h)
-			brick.shapeColor = color(0, 0, 0)
-			bricks.add(brick)
-			brick.immovable = true;
+			var grid = createSprite(offsetX+c*(grid_w+grid_margin), offsetY+r*(grid_h+grid_margin), grid_w, grid_h)
+			grid.shapeColor = color(0, 0, 100)
+			grids.add(grid)
 
 		}
 	}
 
+		walls = new Group();
+
+	for(var i = 0; i<rows; i++){
+		for(var j = 0; j<columns; j++){
+			var currvalue = level[i][j]
+				if(currvalue == "h"){
+					hwall = "h";
+				hwall = createSprite(grid_w * j + offsetX, grid_h * i + offsetY, grid_w/1, 20)
+					fill(0, 100, 100)
+					ellipse(grid_w * j + offsetX, grid_h * i + offsetY, 5, 5);
+					hwall.shapeColor = color(0, 0, 0)
+					walls.add(hwall)
+			} 
+				if(currvalue == "v"){
+					vwall = "v";
+					vwall = createSprite(grid_w * j + offsetX, grid_h * i + offsetY,  20, grid_h/1)
+					fill(0, 100, 100)
+					ellipse(grid_w * j + offsetX, grid_h * i + offsetY, 5, 5);
+					vwall.shapeColor = color(0, 0, 0)
+					walls.add(vwall)
+			}	
+
+				if(currvalue == "s"){
+					start = "s";
+					start = createSprite(grid_w * j + offsetX, grid_h * i + offsetY, grid_w/2, grid_w/2)
+					start.shapeColor = color(180, 100, 100)
+			}
+
+				if(currvalue == "g"){
+					goal = "g";
+					goal = createSprite(grid_w * j + offsetX, grid_h * i + offsetY, grid_w/2, grid_h/2)
+					goal.shapeColor = color(0, 100, 100)
+				}
+
+		}
+	}
 }
 
-function nextlevel(){
+function characterupdate(){
 
-	if(bricks.length == 0 && currlevel < 3) {
-		currlevel += 1
-		rows *= 2
-		lives += 1
-		ball.position.x = width/2
-		ball.position.y = height-200
-		ball.velocity.x = 0
-		ball.velocity.y = 0
-		drawBricks();
+	character.position.x = constrain(character.position.x, 160, 640)
+	character.position.y = constrain(character.position.y, 40, 520)
+
+	if(keyWentDown("a") || keyWentDown(LEFT_ARROW)){
+		character.velocity.x -= .5
+		character.position.x += character.velocity.x
 	}
+
+	if(keyWentDown("d") || keyWentDown(RIGHT_ARROW)){
+		character.velocity.x += .5
+		character.position.x += character.velocity.x
+	}
+
+	if(keyWentDown("s") || keyWentDown(DOWN_ARROW)){
+		character.velocity.y += .5
+		character.position.y += character.velocity.y
+	}
+
+	if(keyWentDown("w") || keyWentDown(UP_ARROW)){
+		character.velocity.y -= .5
+		character.position.y += character.velocity.y
+	}
+
+
+}
+
+function update(){
+	//Check Collisions 
+	character.collide(walls, wallHit)
+	character.collide(goal, endHit)
+	//Check Death
+	death = lives == 0
+	win = lives == 5
 
 }
 

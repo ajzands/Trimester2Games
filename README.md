@@ -1,10 +1,17 @@
-## Welcome to GitHub Pages
+## Welcome to Avery's Trimester 2 Game Library
 
-You can use the [editor on GitHub](https://github.com/ajzands/Trimester2Games/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+This trimester we began with the assignment to complete 5 games by the end of the trimester. This website is the library of all of the games I create during this time.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Linetap: https://ajzands.github.io/Trimester2Games/Line/
+This is the first game I created called Linetap, in Linetap, a line moves across the screen. As time ticks down, you must click on the line, for points and more time. The bigger darker blue area gives 1 point, and increases time by 1 second, and the smaller bar in the middle adds 5 points and increases the time by 3 seconds.
 
-### Markdown
+## Breakout: https://ajzands.github.io/Trimester2Games/Breakout/
+This is the second game I created this trimester. It was a remake of the classic game Breakout. In this game, you control a paddle, which you use to keep the ball from hitting the bottom of the screen. You gain points by hitting the bricks at the top of the screen, and when all the bricks on the screen are cleared, you go to the next level.
+
+## Maze: https://ajzands.github.io/Trimester2Games/Maze/
+This is the third game I created. It is a type of maze game, where you control a character, and you, using WASD or Arrow Keys, guide your character from the green start square to the red victory square. You have 3 lives to complete the level, but be sure to pay attention, your momentum stays with you until you die or win!
+
+
 
 Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 

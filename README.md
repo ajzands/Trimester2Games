@@ -8,6 +8,3 @@ This trimester we began with the assignment to complete 5 games by the end of th
 
 ## Maze: https://ajzands.github.io/Trimester2Games/Maze/
 
-This is the third game I created. It is a type of maze game, where you control a character, and you, using WASD or Arrow Keys, guide your character from the green start square to the red victory square. You have 3 lives to complete the level, but be sure to pay attention, your momentum stays with you until you die or win!
-
-

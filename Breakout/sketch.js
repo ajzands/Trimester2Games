@@ -91,6 +91,7 @@ function draw(){
 		if(keyWentDown('R')){
 		score = 0
 		lives = 3
+		currlevel = 1
 		ball.position.x = width/2
 		ball.position.y = height-200
 		bricks.removeSprites(bricks);
@@ -129,6 +130,8 @@ function draw(){
 	}
 
 
+
+
 }
 
 function mousePressed() {
@@ -162,7 +165,7 @@ function drawBricks(){
 
 function nextlevel(){
 
-	if(bricks.length == 0 && currlevel < 3) {
+	if(bricks.length == 0 && currlevel < 3 && currlevel >= 1) {
 		currlevel += 1
 		rows *= 2
 		lives += 1

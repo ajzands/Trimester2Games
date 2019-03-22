@@ -51,8 +51,8 @@ function draw(){
 		fill(0, 0, 0)
 		textSize(50)
 		text("Game Over, Press R to Restart" , 100, 400)
-		Oof.setVolume(0.3);
-		Oof.play();
+// 		Oof.setVolume(0.3);
+// 		Oof.play();
 
 	}
 
@@ -89,8 +89,8 @@ function draw(){
 		fill(0, 0, 0)
 		textSize(50)
 		text("You Win, Press P to Play Again" , 50, 400)
-		Bigdub.setVolume(0.3);
-		Bigdub.play();
+// 		Bigdub.setVolume(0.3);
+// 		Bigdub.play();
 	}
 
 	if(keyWentDown("p")){
@@ -129,7 +129,7 @@ function wallHit(character, hwall, vwall){
 	character.position.y = start.position.y
 	character.velocity.x = 0
 	character.velocity.y = 0
-	Smash.play();
+// 	Smash.play();
 }
 
 function endHit(character, goal){
@@ -143,8 +143,8 @@ character.overlap(coins, cointHit)
 function coinHit(character, coin){
 	coin.remove()
 	coins += 1
-	Chaching.setVolume(0.3);
-	Chaching.play();
+// 	Chaching.setVolume(0.3);
+// 	Chaching.play();
 	console.log("You hit a coin")
 }
 

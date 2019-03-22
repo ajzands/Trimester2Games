@@ -7,3 +7,4 @@ This trimester we began with the assignment to complete 5 games by the end of th
 * [Breakout](https://ajzands.github.io/Trimester2Games/Breakout/)
 
 * [Maze](https://ajzands.github.io/Trimester2Games/Maze/)
+

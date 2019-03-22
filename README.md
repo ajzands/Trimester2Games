@@ -8,3 +8,5 @@ This trimester we began with the assignment to complete 5 games by the end of th
 
 * [Maze](https://ajzands.github.io/Trimester2Games/Maze/)
 
+* [Deposit](https://ajzands.github.io/Trimester2Games/PacmanCarry/)
+

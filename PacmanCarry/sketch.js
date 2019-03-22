@@ -14,12 +14,12 @@ var grid_margin = 0;
 var level = [["s", "h", "h", "h", "v", "c", "v", "c", "v", "h", "h", "h", "h", "v", "c"],[0,"c",0, "h", "h", "c", "v", "c", "v", "c", "h", "h", "h", "v", "c"],["v", "h", "c", 0, 0, 0, "v", "c", 0, "c", 0, 0, "v", 0, 0],["h", "h", "h", "v", 0, "c", 0, "h", "h", "h", 0, "c", "v", "c", "v"],["c", 0, "c", "v", 0, 0, "h", "c", "c", "h", 0, 0 , "h", 0, "v"],["h", 0, "v", "v", "c", "c", 0, 0, "c", "v", 0, "c", "h", 0, 0],["v", 0, 0, "h", "h", 0, 0, 0, 0, "v", 0, "c", 0, 0, "g"],["v", "c", 0, 0, "v", 0, 0, 0, 0, "c", 0, 0, "v", 0, 0],["v", "c", "c", 0, "h", "h", "h", 0, "c", "c", 0, "h", 0, 0, "v"],["v", 0, 0, 0, 0, 0, 0, 0, "h", 0, 0 , 0, 0, 0, "v"]]
 
 
-function preload() {
- Oof = loadSound('sounds/oof.mp3');
- Chaching = loadSound('sounds/chaching.mp3')
- Smash = loadSound('sounds/smash.mp3')
- Bigdub = loadSound('sounds/bigdub.mp3')
-}
+// function preload() {
+//  Oof = loadSound('sounds/oof.mp3');
+//  Chaching = loadSound('sounds/chaching.mp3')
+//  Smash = loadSound('sounds/smash.mp3')
+//  Bigdub = loadSound('sounds/bigdub.mp3')
+// }
 
 
 function setup(){
